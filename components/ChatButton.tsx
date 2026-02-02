@@ -1,43 +1,156 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useRef, useEffect } from 'react'
+import Image from 'next/image'
 
 export default function ChatButton() {
-  const [isModalOpen, setIsModalOpen] = useState(false)
+  const [isOpen, setIsOpen] = useState(false)
+  const [messages, setMessages] = useState([
+    {
+      text: "Hi there! 👋 I'm Emman!. Thanks for checking out my website! Feel free to ask about my projects, the tools I use, or how playing guitar keeps me in a creative mindset. How can I help you today?",
+      sender: 'bot',
+      timestamp: new Date()
+      }
+  ])
+  const [inputValue, setInputValue] = useState('')
+  const [isLoading, setIsLoading] = useState(false)
+  const messagesEndRef = useRef<HTMLDivElement>(null)
+
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
+  }
+
+  useEffect(() => {
+    scrollToBottom()
+  }, [messages])
+ 
+  const handleSend = async () => {
+    if (inputValue.trim() && !isLoading) {
+      const userMessage = inputValue
+      
+      // Add user message
+      setMessages(prev => [...prev, {
+        text: userMessage,
+        sender: 'user',
+        timestamp: new Date()
+      }])
+      
+      setInputValue('')
+      setIsLoading(true)
+
+      try {
+        // Call Gemini API
+        const response = await fetch('/api/chat', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ message: userMessage }),
+        })
+
+        const data = await response.json()
+
+        if (data.reply) {
+          // Add bot response
+          setMessages(prev => [...prev, {
+            text: data.reply,
+            sender: 'bot',
+            timestamp: new Date()
+          }])
+        } else {
+          throw new Error('No reply received')
+        }
+      } catch (error) {
+        console.error('Error:', error)
+        setMessages(prev => [...prev, {
+          text: "Sorry, I'm having trouble connecting right now. Please try again later! 😅",
+          sender: 'bot',
+          timestamp: new Date()
+        }])
+      } finally {
+        setIsLoading(false)
+      }
+    }
+  }
 
   return (
     <>
       <button 
         className="chat-button" 
-        onClick={() => setIsModalOpen(true)}
-        title="Chat with me"
+        onClick={() => setIsOpen(!isOpen)}
+        title="Chat with Emman"
       >
-        💬
+        {isOpen ? '✕' : '💬'}
       </button>
 
-      {isModalOpen && (
-        <div className="modal active">
-          <div className="modal-content">
-            <span 
-              className="close-modal" 
-              onClick={() => setIsModalOpen(false)}
-            >
-              &times;
-            </span>
-            <h2 style={{ marginBottom: '0.5rem' }}>Chat with Me</h2>
-            <p style={{ color: 'var(--success)', marginBottom: '1rem', fontSize: '0.9rem' }}>
-              ● Online
-            </p>
-            <p style={{ marginBottom: '1.5rem', color: 'var(--text-secondary)', fontSize: '0.9rem' }}>
-              Hi there! 👋 Thanks for checking out my website! Feel free to ask about my projects, skills, or anything else. How can I help you today?
-            </p>
-            <div className="form-group">
-              <textarea 
-                placeholder="Type your message..." 
-                style={{ minHeight: '100px' }}
-              />
+      {isOpen && (
+        <div className="chat-widget">
+          {/* Chat Header */}
+          <div className="chat-header">
+            <div className="chat-header-info">
+              <div className="chat-avatar">
+                <Image
+                  src="/images/profile_new.jpg"
+                  alt="Ren"
+                  width={40}
+                  height={40}
+                />
+                <span className="online-indicator"></span>
+              </div>
+              <div>
+                <h4>Chat with Emman</h4>
+                <p className="online-status">ONLINE</p>
+              </div>
             </div>
-            <button className="btn-submit">Send Message</button>
+            <button 
+              className="chat-close"
+              onClick={() => setIsOpen(false)}
+            >
+              ✕
+            </button>
+          </div>
+
+          {/* Chat Messages */}
+          <div className="chat-messages">
+            {messages.map((msg, idx) => (
+              <div key={idx} className={`chat-message ${msg.sender}`}>
+                <div className="message-bubble">
+                  {msg.text}
+                </div>
+              </div>
+            ))}
+            {isLoading && (
+              <div className="chat-message bot">
+                <div className="message-bubble">
+                  <div className="typing-indicator">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                  </div>
+                </div>
+              </div>
+            )}
+            <div ref={messagesEndRef} />
+          </div>
+
+          {/* Chat Input */}
+          <div className="chat-input-container">
+            <input
+              type="text"
+              className="chat-input"
+              placeholder="Type a message..."
+              value={inputValue}
+              onChange={(e) => setInputValue(e.target.value)}
+              onKeyPress={(e) => e.key === 'Enter' && handleSend()}
+              disabled={isLoading}
+            />
+            <button 
+              className="chat-send-btn"
+              onClick={handleSend}
+              disabled={isLoading}
+            >
+              ➤
+            </button>
           </div>
         </div>
       )}

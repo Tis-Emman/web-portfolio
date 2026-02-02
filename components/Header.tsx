@@ -2,6 +2,7 @@
 
 import Image from 'next/image'
 import { useState } from 'react'
+import ThemeToggle from './ThemeToggle'
 
 export default function Header() {
   const [hovered, setHovered] = useState(false)
@@ -35,6 +36,7 @@ export default function Header() {
             <h1>
               Emmanuel Dela Pena
               <span className="verified-badge">✓</span>
+              <ThemeToggle />
             </h1>
             <p className="location">📍 Baliuag City, Bulacan, Philippines</p>
             <p className="tagline">Aspiring Full Stack Developer | Backend Developer</p>

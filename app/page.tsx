@@ -10,11 +10,13 @@ import Recommendations from '@/components/Recommendations'
 import Contact from '@/components/Contact'
 import ScrollIndicator from '@/components/ScrollIndicator'
 import ChatButton from '@/components/ChatButton'
+import ThemeToggle from '@/components/ThemeToggle'  // Add this import
 
 export default function Home() {
   return (
     <>
       <ScrollIndicator />
+
       <Header />
       
       <div className="container">
