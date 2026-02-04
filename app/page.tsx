@@ -27,6 +27,7 @@ export default function Home() {
             <Education />
             <TechStack />
             <Certifications />
+            <BeyondScreen></BeyondScreen>
           </div>
 
           {/* Right Column */}

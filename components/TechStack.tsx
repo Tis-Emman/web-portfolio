@@ -1,13 +1,15 @@
 import Link from 'next/link'
+import { Settings } from 'lucide-react'
 
 export default function TechStack() {
   return (
     <div className="card">
       <div className="card-header">
-        <span className="card-header-icon">⚡</span>
+        <Settings size={20} className="card-header-icon" />
         Tech Stack
         <Link href="/tech-stack" className="view-all">View All &gt;</Link>
       </div>
+
       <div className="tech-category">
         <h4>Frontend</h4>
         <div className="tech-tags">
@@ -18,6 +20,7 @@ export default function TechStack() {
           <span className="tag">React</span>
         </div>
       </div>
+
       <div className="tech-category">
         <h4>Backend</h4>
         <div className="tech-tags">
@@ -28,6 +31,7 @@ export default function TechStack() {
           <span className="tag">Python</span>
         </div>
       </div>
+
       <div className="tech-category">
         <h4>Databases</h4>
         <div className="tech-tags">
@@ -38,6 +42,7 @@ export default function TechStack() {
           <span className="tag">Redis</span>
         </div>
       </div>
+
       <div className="tech-category">
         <h4>Tools & DevOps</h4>
         <div className="tech-tags">

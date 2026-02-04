@@ -2,13 +2,13 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import { Award } from "lucide-react";
 
 export default function Certifications() {
   const [selectedCert, setSelectedCert] = useState<string | null>(null);
 
   useEffect(() => {
     document.body.style.overflow = selectedCert ? "hidden" : "auto";
-
     return () => {
       document.body.style.overflow = "auto";
     };
@@ -30,7 +30,7 @@ export default function Certifications() {
   return (
     <div className="card">
       <div className="card-header">
-        <span className="card-header-icon">📜</span>
+        <Award size={20} className="card-header-icon" />
         Certifications
         <Link href="/certifications" className="view-all">
           View All &gt;

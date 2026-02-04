@@ -26,7 +26,8 @@ export default function CertificationsPage() {
       provider: "CISCO",
       year: "2026",
       img: "/images/python-essentials-1-certificate.png"
-    }
+    },
+    
   ]
 
   return (

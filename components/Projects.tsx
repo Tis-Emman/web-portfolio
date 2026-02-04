@@ -36,6 +36,20 @@ export default function Projects() {
             <a href="#" className="project-link" target="_blank">View Project</a>
           </div>
         </div>
+        <div className="project-card">
+          <Image
+            src="/images/sinervet.png"
+            alt="Project 2" 
+            width={600}
+            height={400}
+            className="project-image"
+          />
+          <div className="project-content">
+            <h3>Sinervet VetHub</h3>
+            <p className="project-description">A website for veterinary at local town</p>
+            <a href="#" className="project-link" target="_blank">View Project</a>
+          </div>
+        </div>
       </div>
     </div>
   )

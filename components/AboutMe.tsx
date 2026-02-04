@@ -1,8 +1,10 @@
+import { User } from 'lucide-react'
+
 export default function AboutMe() {
   return (
     <div className="card">
       <div className="card-header">
-        <span className="card-header-icon">👤</span>
+        <User className="card-header-icon" size={20} />
         About Me
       </div>
       <p className="about-text">
@@ -12,7 +14,6 @@ export default function AboutMe() {
         user-centered solutions while continuously pushing myself to grow both
         technically and personally.
       </p>
-
     </div>
   );
 }
