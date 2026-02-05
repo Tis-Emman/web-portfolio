@@ -8,12 +8,11 @@ export default function BeyondScreen() {
         Beyond the Screen
       </div>
       <p className="about-text" style={{ marginBottom: '1rem' }}>
-        Describe your hobbies and interests outside of work. What do you do to recharge and stay creative? Share what makes you unique beyond your professional life.
-      </p>
+Outside of work, I recharge by playing guitar, coding personal projects, and cooking. I also stay active with walks and exercise, which keeps me creative, curious, and balanced.      </p>
       <div className="hobbies-grid">
         <div className="hobby-card">
           <Image
-            src="https://via.placeholder.com/300x200/111111/00ffff?text=Hobby+1"
+            src="/images/hobby_1.png"
             alt="Hobby 1"
             width={300}
             height={200}

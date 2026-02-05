@@ -6,12 +6,11 @@ export default function Recommendations() {
         Recommendations
       </div>
       <div className="recommendation-card">
-        <p className="recommendation-text">&quot;Write a testimonial or recommendation from a client or colleague here.&quot;</p>
-        <p className="recommendation-author">— Person Name</p>
+        <p className="recommendation-text">&quot;He's a great team member&quot;</p>
+        <p className="recommendation-author">- Dela Cruz</p>
       </div>
       <div className="carousel-dots">
         <span className="dot active"></span>
-        <span className="dot"></span>
       </div>
     </div>
   )

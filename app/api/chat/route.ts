@@ -28,7 +28,6 @@ About Emman:
   - Android apps with Firebase & SQLite
   - AI-powered portfolio chatbot
   - Full-stack web applications
-- Invented a motorized seed planter to help Filipino farmers
 - Background in tech support & customer service
 - Hobbies: Guitar, gym, coding, gaming, cooking
 

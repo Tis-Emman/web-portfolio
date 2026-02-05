@@ -1,4 +1,7 @@
+"use client";
+
 import { FaLinkedin, FaGithub, FaFacebook, FaInstagram } from "react-icons/fa";
+import { Mail, PhoneCall } from "lucide-react";
 
 export default function Contact() {
   return (
@@ -8,6 +11,7 @@ export default function Contact() {
         Describe your availability and the types of projects you're interested in. What services do you offer? How can people work with you?
       </p>
 
+      {/* Get in Touch Section */}
       <div style={{ marginBottom: '2rem' }}>
         <h4
           style={{
@@ -21,17 +25,24 @@ export default function Contact() {
           GET IN TOUCH
         </h4>
         <div className="contact-grid">
-          <div className="contact-method">
-            <h4>📧 Email</h4>
-            <a href="emmandelapena755@gmail.com">emmandelapena755@gmail.com</a>
+          <div className="contact-method flex items-center gap-2">
+            <Mail className="w-5 h-5 text-blue-500" /> {/* Lucide Mail Icon */}
+            <div>
+              <h4>Email</h4>
+              <a href="mailto:emmandelapena755@gmail.com">emmandelapena755@gmail.com</a>
+            </div>
           </div>
-          <div className="contact-method">
-            <h4>💬 Let's Talk</h4>
-            <a href="#" target="_blank">Schedule a Call</a>
+          <div className="contact-method flex items-center gap-2">
+            <PhoneCall className="w-5 h-5 text-green-500" /> {/* Lucide Phone Icon */}
+            <div>
+              <h4>Let's Talk</h4>
+              <a href="https://calendly.com/emmandelapena755" target="_blank">Schedule a Call</a>
+            </div>
           </div>
         </div>
       </div>
 
+      {/* Follow Me Section */}
       <div>
         <h4
           style={{
