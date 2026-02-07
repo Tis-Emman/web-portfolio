@@ -12,7 +12,7 @@ export default function Experience() {
 
       <div className="experience-item">
         <span className="period">2022 - Present</span>
-        <h4> • Practice Owner</h4>
+        <h4> ● Practice Owner</h4>
         <p className="company"> Emeren Refrigeration and Airconditioning Services</p>
       </div>
 

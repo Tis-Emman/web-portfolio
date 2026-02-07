@@ -27,7 +27,7 @@ export default function Contact() {
           GET IN TOUCH
         </h4>
         <div className="contact-grid">
-          <div className="contact-method flex items-center gap-2">
+          <div className="contact-method">
             <Mail className="w-5 h-5 text-blue-500" /> {/* Lucide Mail Icon */}
             <div>
               <h4>Email</h4>
@@ -37,7 +37,7 @@ export default function Contact() {
             </div>
           </div>
 
-          <div className="contact-method flex items-center gap-2">
+          <div className="contact-method">
             <PhoneCall className="w-5 h-5 text-green-500" />{" "}
             {/* Lucide Phone Icon */}
             <div>
@@ -48,7 +48,7 @@ export default function Contact() {
             </div>
           </div>
 
-          <div className="contact-method flex items-center gap-2">
+          <div className="contact-method">
             <FileText className="w-4 h-4" /> {/* Lucide Mail Icon */}
             <div>
               <h4>View my CV</h4>
@@ -58,7 +58,7 @@ export default function Contact() {
             </div>
           </div>
 
-          <div className="contact-method flex items-center gap-2">
+          <div className="contact-method">
             <Users className="w-5 h-5 text-green-500" />{" "}
             {/* Lucide Phone Icon */}
             <div>
@@ -80,9 +80,15 @@ export default function Contact() {
             letterSpacing: "0.5px",
           }}
         >
-          FOLLOW ME
+
         </h4>
-        <div className="social-links flex gap-4">
+
+                     <div className="contact-method">
+                      <h4 className="social-title" style={{marginTop: 10}}>My Socials</h4> 
+
+
+        <div className="social-links">
+
           <a
             href="https://www.linkedin.com/in/emmanuel-dela-pena-328433347/"
             className="social-icon text-blue-600 text-2xl"
@@ -111,6 +117,7 @@ export default function Contact() {
           >
             <FaInstagram />
           </a>
+                    </div>
         </div>
       </div>
     </div>

@@ -546,7 +546,14 @@ header .container {
 
 .social-links {
   display: flex;
+  justify-content: center;
   gap: 1rem;
+}
+
+.social-title{
+  display: flex;
+  justify-content: center;
+  padding-bottom: 10px;
 }
 
 .social-icon {
@@ -1142,16 +1149,18 @@ footer {
     text-align: center;
   }
 
-  .header-buttons {
+  .header-info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .location {
     justify-content: center;
   }
 
-  .hobbies-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .contact-grid {
-    grid-template-columns: 1fr;
+  .header-buttons {
+    justify-content: center;
   }
 }
 

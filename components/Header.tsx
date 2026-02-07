@@ -38,7 +38,7 @@ export default function Header() {
 
           {/* Info Section */}
           <div className="header-info">
-            <h1 className="flex items-center gap-2">
+            <h1>
               Emmanuel Dela Pena
 
             </h1>
