@@ -74,6 +74,41 @@ export function useEmailVerification() {
     return () => clearInterval(interval);
   }, [waitingForConfirmation]);
 
+  // Method 4: Handle hash-based token flow (implicit flow)
+  // Supabase redirects to /#access_token=... when no callback route is used.
+  // This detects those tokens on mount, lets Supabase consume them,
+  // then shows the success screen — no button click needed.
+  useEffect(() => {
+    const hash = window.location.hash;
+    if (!hash) return;
+
+    const params = new URLSearchParams(hash.slice(1)); // strip leading #
+    const type = params.get("type");
+    const accessToken = params.get("access_token");
+
+    if (type === "signup" && accessToken) {
+      // Supabase JS v2 automatically picks up the hash tokens and fires
+      // onAuthStateChange with SIGNED_IN. We just need to set up the
+      // "waiting" state so the success screen can render when it fires.
+      // We also clear the ugly hash from the URL immediately.
+      window.history.replaceState(null, "", window.location.pathname);
+
+      // Force a session check — Supabase may have already processed the hash
+      supabase.auth.getSession().then(({ data: { session } }) => {
+        if (session?.user?.email_confirmed_at) {
+          setRegistrationStep("success");
+          // Also make sure the modal is visible by setting showRegisterModal
+          // via the flag that page.tsx checks
+          setWaitingForConfirmation(false);
+        } else {
+          // Not yet processed — wait for onAuthStateChange to fire
+          setWaitingForConfirmation(true);
+          setRegistrationStep("waiting");
+        }
+      });
+    }
+  }, []);
+
   const startWaitingForVerification = (email: string) => {
     setVerificationEmail(email);
     setRegistrationStep("waiting");

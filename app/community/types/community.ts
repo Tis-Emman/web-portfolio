@@ -7,6 +7,10 @@ export interface Post {
   title: string;
   content: string;
   comments: number;
+  // Additional fields for database
+  user_id?: string;
+  created_at?: string;
+  updated_at?: string;
 }
 
 export interface User {
@@ -28,6 +32,11 @@ export interface RegistrationData {
 export interface SignInData {
   email: string;
   password: string;
+}
+
+export interface CreatePostData {
+  title: string;
+  content: string;
 }
 
 export type RegistrationStep = "form" | "waiting" | "success";

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Loader } from "lucide-react";
 import { CommunityHeader } from "./components/community/CommunityHeader";
 import { Sidebar } from "./components/community/Sidebar";
@@ -10,10 +10,12 @@ import { SignInModal } from "./components/auth/SignInModal";
 import { LogoutModal } from "./components/auth/LogoutModal";
 import { EmailVerification } from "./components/auth/EmailVerification";
 import { RegistrationSuccess } from "./components/auth/RegistrationSuccess";
+import { CreatePostModal } from "./components/community/CreatePostModal";
 import { useAuth } from "./hooks/useAuth";
 import { useTheme } from "./hooks/useTheme";
 import { useEmailVerification } from "./hooks/useEmailVerification";
-import type { Post, RegistrationData, SignInData } from "./types/community";
+import { usePosts } from "./hooks/usePosts";
+import type { RegistrationData, SignInData, CreatePostData } from "./types/community";
 
 export default function CommunityHub() {
   // Hooks
@@ -39,6 +41,14 @@ export default function CommunityHub() {
     resetVerification,
   } = useEmailVerification();
 
+  const {
+    posts,
+    isLoading: postsLoading,
+    error: postsError,
+    createPost,
+    refreshPosts,
+  } = usePosts(user);
+
   // Local state
   const [activeTab, setActiveTab] = useState<"latest" | "most_discussed">(
     "latest"
@@ -47,13 +57,28 @@ export default function CommunityHub() {
   const [showRegisterModal, setShowRegisterModal] = useState(false);
   const [showSignInModal, setShowSignInModal] = useState(false);
   const [showLogoutModal, setShowLogoutModal] = useState(false);
+  const [showCreatePostModal, setShowCreatePostModal] = useState(false);
+  const [createPostError, setCreatePostError] = useState("");
+  const [isCreatingPost, setIsCreatingPost] = useState(false);
+
+  // Auto-open the modal when the user arrives via the email verification link.
+  // Supabase uses the implicit flow and puts tokens in the URL hash.
+  useEffect(() => {
+    const hash = window.location.hash;
+    if (!hash) return;
+
+    const params = new URLSearchParams(hash.slice(1));
+    if (params.get("type") === "signup" && params.get("access_token")) {
+      setShowRegisterModal(true);
+    }
+  }, []);
 
   // Handlers
   const handleRefresh = () => {
     setIsRefreshing(true);
+    refreshPosts();
     setTimeout(() => {
       setIsRefreshing(false);
-      window.location.reload();
     }, 500);
   };
 
@@ -89,24 +114,39 @@ export default function CommunityHub() {
   };
 
   const handleCreatePost = () => {
-    // TODO: Navigate to create post
-    console.log("Create post clicked");
+    if (!user) {
+      // If not logged in, prompt to sign in
+      setShowSignInModal(true);
+      return;
+    }
+    setShowCreatePostModal(true);
+    setCreatePostError("");
   };
 
-  // Mock data
-  const posts: Post[] = [
-    {
-      id: "1",
-      author: "Emmanuel Dela Pena",
-      avatar: "🔵",
-      timeAgo: "1 day ago",
-      badge: "STI College Baliuag",
-      title: "We're officially live!",
-      content:
-        "Currently preparing my portfolio for deployment after completing local development. Final refinements and testing are underway.",
-      comments: 0,
-    },
-  ];
+  const handleCreatePostSubmit = async (data: CreatePostData) => {
+    setIsCreatingPost(true);
+    setCreatePostError("");
+
+    try {
+      const result = await createPost(data);
+
+      if (result.success) {
+        // Success! Close modal and clear error
+        setShowCreatePostModal(false);
+        setCreatePostError("");
+        
+        // Optional: Show success message
+        console.log("Post created successfully!");
+      } else {
+        // Show error in modal
+        setCreatePostError(result.error || "Failed to create post");
+      }
+    } catch (error: any) {
+      setCreatePostError(error?.message || "An unexpected error occurred");
+    } finally {
+      setIsCreatingPost(false);
+    }
+  };
 
   // Loading state
   if (isCheckingAuth) {
@@ -167,12 +207,48 @@ export default function CommunityHub() {
               </button>
             </div>
 
-            <PostList posts={posts} />
+            {postsLoading && posts.length === 0 ? (
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  minHeight: "200px",
+                }}
+              >
+                <Loader size={32} className="animate-spin" />
+              </div>
+            ) : postsError ? (
+              <div
+                style={{
+                  padding: "2rem",
+                  textAlign: "center",
+                  color: "var(--text-secondary)",
+                }}
+              >
+                <p>Failed to load posts. Please try refreshing.</p>
+                <p style={{ fontSize: "0.85rem", marginTop: "0.5rem" }}>
+                  {postsError}
+                </p>
+              </div>
+            ) : posts.length === 0 ? (
+              <div
+                style={{
+                  padding: "2rem",
+                  textAlign: "center",
+                  color: "var(--text-secondary)",
+                }}
+              >
+                <p>No posts yet. Be the first to share something!</p>
+              </div>
+            ) : (
+              <PostList posts={posts} />
+            )}
           </main>
         </div>
       </div>
 
-      {/* Registration form — only shown on the "form" step */}
+      {/* Registration form – only shown on the "form" step */}
       {registrationStep === "form" && (
         <RegistrationModal
           isOpen={showRegisterModal}
@@ -187,9 +263,7 @@ export default function CommunityHub() {
         />
       )}
 
-      {/* Email verification waiting screen
-          isOpen is always true here because this component only mounts
-          when registrationStep === "waiting", so showRegisterModal is guaranteed true */}
+      {/* Email verification waiting screen */}
       {registrationStep === "waiting" && showRegisterModal && (
         <EmailVerification
           isOpen={true}
@@ -201,10 +275,7 @@ export default function CommunityHub() {
 
       {/* Success screen after email confirmed */}
       {registrationStep === "success" && showRegisterModal && (
-        <RegistrationSuccess
-          isOpen={true}
-          onClose={closeRegistrationFlow}
-        />
+        <RegistrationSuccess isOpen={true} onClose={closeRegistrationFlow} />
       )}
 
       <SignInModal
@@ -229,6 +300,17 @@ export default function CommunityHub() {
         isLoading={authLoading}
         onClose={() => setShowLogoutModal(false)}
         onConfirm={handleLogout}
+      />
+
+      <CreatePostModal
+        isOpen={showCreatePostModal}
+        isLoading={isCreatingPost}
+        error={createPostError}
+        onClose={() => {
+          setShowCreatePostModal(false);
+          setCreatePostError("");
+        }}
+        onSubmit={handleCreatePostSubmit}
       />
 
       <footer style={{ marginTop: 50 }}>

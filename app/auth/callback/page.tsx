@@ -1,48 +1,36 @@
-"use client";
+import { NextRequest, NextResponse } from "next/server";
+import { createClient } from "@supabase/supabase-js";
 
-import { useEffect } from "react";
-import { useRouter } from "next/navigation";
-import { supabase } from "@/app/community/lib/supabase";
+export async function GET(request: NextRequest) {
+  const { searchParams, origin } = new URL(request.url);
 
-export default function AuthCallback() {
-  const router = useRouter();
+  const code = searchParams.get("code");
+  const token_hash = searchParams.get("token_hash");
+  const type = searchParams.get("type");
 
-  useEffect(() => {
-    // Supabase puts the tokens in the URL hash fragment
-    // getSession() will automatically parse and store them
-    const handleCallback = async () => {
-      const { data, error } = await supabase.auth.getSession();
-
-      if (error) {
-        console.error("Auth callback error:", error);
-        router.replace("/?error=confirmation_failed");
-        return;
-      }
-
-      if (data.session) {
-        // Successfully confirmed — redirect back to community page
-        // The onAuthStateChange listener in useEmailVerification will
-        // detect the SIGNED_IN event and show the success popup
-        router.replace("/community");
-      } else {
-        router.replace("/community");
-      }
-    };
-
-    handleCallback();
-  }, [router]);
-
-  return (
-    <div
-      style={{
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        minHeight: "100vh",
-        fontSize: "1.1rem",
-      }}
-    >
-      Confirming your email...
-    </div>
+  const supabase = createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
   );
+
+  // PKCE flow (code-based)
+  if (code) {
+    await supabase.auth.exchangeCodeForSession(code);
+    return NextResponse.redirect(`${origin}/`);
+  }
+
+  // OTP/token flow (email confirmation link)
+  if (token_hash && type) {
+    const { error } = await supabase.auth.verifyOtp({
+      token_hash,
+      type: type as any,
+    });
+
+    if (!error) {
+      return NextResponse.redirect(`${origin}/`);
+    }
+  }
+
+  // Fallback — just go home
+  return NextResponse.redirect(`${origin}/`);
 }
