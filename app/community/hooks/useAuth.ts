@@ -75,30 +75,62 @@ export function useAuth() {
     setError("");
 
     try {
+      // Check if email already exists in profiles table
+      const { data: existingUser, error: checkError } = await supabase
+        .from("profiles")
+        .select("email")
+        .eq("email", data.email)
+        .single();
+
+      if (existingUser) {
+        throw new Error("This email is already registered. Please sign in instead.");
+      }
+
+      // Proceed with signup
       const { data: authData, error: authError } = await supabase.auth.signUp({
         email: data.email,
         password: data.password,
       });
 
-      if (authError) throw new Error(authError.message);
+      if (authError) {
+        // Check if user already exists (backup check)
+        if (authError.message.includes("already registered") || authError.message.includes("already been registered")) {
+          throw new Error("This email is already registered. Please sign in instead.");
+        }
+        throw new Error(authError.message);
+      }
+      
       if (!authData.user) throw new Error("Registration failed. Please try again.");
 
-      const profileData = {
-        id: authData.user.id,
-        email: data.email,
-        first_name: data.firstName,
-        last_name: data.lastName,
-        user_type: data.userType,
-        school: data.school || null,
-      };
-
-      const { error: profileError } = await supabase
+      // Check if profile already exists (in case of interrupted registration)
+      const { data: existingProfile } = await supabase
         .from("profiles")
-        .insert([profileData])
-        .select();
+        .select("id")
+        .eq("id", authData.user.id)
+        .single();
 
-      if (profileError) {
-        throw new Error(`Failed to create profile: ${profileError.message}`);
+      if (!existingProfile) {
+        // Only create profile if it doesn't exist
+        const profileData = {
+          id: authData.user.id,
+          email: data.email,
+          first_name: data.firstName,
+          last_name: data.lastName,
+          user_type: data.userType,
+          school: data.school || null,
+        };
+
+        const { error: profileError } = await supabase
+          .from("profiles")
+          .insert([profileData])
+          .select();
+
+        if (profileError) {
+          // If it's a duplicate key error, the profile was created in a race condition - that's ok
+          if (profileError.code !== "23505") {
+            throw new Error(`Failed to create profile: ${profileError.message}`);
+          }
+        }
       }
 
       setIsLoading(false);
