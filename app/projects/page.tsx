@@ -10,7 +10,7 @@ export default function ProjectsPage() {
       id: 1,
       title: "Cozy Crate E-Commerce",
       description: "A Java GUI Swing Program that uses SQLITE database for CRUD operations. Full-featured e-commerce application with inventory management, shopping cart, and order processing.",
-      image: "/images/cozy-crate.png",
+      image: "/images/projects/cozy-crate.png",
       technologies: ["Java", "Swing", "SQLite", "JDBC"],
       liveLink: "", // Add your live link if available
       githubLink: "" // Add your GitHub link if available
@@ -19,7 +19,7 @@ export default function ProjectsPage() {
       id: 2,
       title: "E Tour Travels",
       description: "A static website for our first year, first sem project. Beautiful travel booking website showcasing various destinations and tour packages with responsive design.",
-      image: "/images/e-tour-travels.png",
+      image: "/images/projects/e-tour-travels.png",
       technologies: ["HTML", "CSS", "JavaScript"],
       liveLink: "", // Add your live link
       githubLink: "" // Add your GitHub link
@@ -28,7 +28,7 @@ export default function ProjectsPage() {
       id: 3,
       title: "Sinervet VetHub",
       description: "A comprehensive website for veterinary services at local town. Features appointment booking, pet records management, and service information for pet owners.",
-      image: "/images/sinervet.png",
+      image: "/images/projects/sinervet.png",
       technologies: ["React", "Node.js", "MongoDB"],
       liveLink: "", // Add your live link
       githubLink: "" // Add your GitHub link
@@ -38,7 +38,7 @@ export default function ProjectsPage() {
       id: 4,
       title: "Korean Express",
       description: "                  A modern Korean grocery delivery platform offering authentic ingredients and fast, reliable service.",
-      image: "/images/korean_express.png",
+      image: "/images/projects/korean_express.png",
       technologies: ["React", "Node.js", "MongoDB"],
       liveLink: "", // Add your live link
       githubLink: "" // Add your GitHub link
