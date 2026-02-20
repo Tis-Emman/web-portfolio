@@ -1,10 +1,13 @@
 "use client";
 
+import { useState } from "react";
 import { FaLinkedin, FaGithub, FaFacebook, FaInstagram } from "react-icons/fa";
-import { Mail, PhoneCall, FileText, Users } from "lucide-react";
+import { Mail, PhoneCall, FileText, Users, X, AlertCircle } from "lucide-react";
 import Link from "next/link";
 
 export default function Contact() {
+  const [showCvPopup, setShowCvPopup] = useState(false);
+
   return (
     <div className="contact-section">
       <h2>Let's work together.</h2>
@@ -49,18 +52,23 @@ export default function Contact() {
           </div>
 
           <div className="contact-method">
-            <FileText className="w-4 h-4" /> {/* Lucide Mail Icon */}
+            <FileText className="w-4 h-4" /> 
             <div>
               <h4>View my CV</h4>
-              <a href="https://mail.google.com/mail/?view=cm&fs=1&to=emmandelapena755@gmail.com">
+              <a 
+                href="#"
+                onClick={(e) => {
+                  e.preventDefault();
+                  setShowCvPopup(true);
+                }}
+              >
                 Click here to view
               </a>
             </div>
           </div>
 
           <div className="contact-method">
-            <Users className="w-5 h-5 text-green-500" />{" "}
-            {/* Lucide Phone Icon */}
+            <Users className="w-5 h-5 text-green-500" />
             <div>
               <h4>Community Hub</h4>
               <Link href="/community"> Join Now!</Link>
@@ -69,7 +77,6 @@ export default function Contact() {
         </div>
       </div>
 
-      {/* Follow Me Section */}
       <div>
         <h4
           style={{
@@ -118,6 +125,41 @@ export default function Contact() {
             <FaInstagram />
           </a>
                     </div>
+        </div>
+      </div>
+
+      {/* CV Not Available Popup */}
+      <div className={`cv-popup-modal ${showCvPopup ? 'active' : ''}`}>
+        <div className="modal-backdrop" onClick={() => setShowCvPopup(false)} />
+        <div className="cv-popup-content">
+          <button
+            className="close-popup-btn"
+            onClick={() => setShowCvPopup(false)}
+          >
+            <X size={20} />
+          </button>
+          <div className="cv-popup-icon">
+            <AlertCircle size={48} />
+          </div>
+          <h3>CV Not Available Yet</h3>
+          <p>My CV is currently being updated and will be available soon. Please check back later or feel free to contact me directly.</p>
+          <div className="cv-popup-actions">
+            <a
+              href="https://mail.google.com/mail/?view=cm&fs=1&to=emmandelapena755@gmail.com&su=CV Request&body=Hi Emmanuel, I would like to request your CV."
+              className="btn-request-cv"
+              target="_blank"
+              onClick={() => setShowCvPopup(false)}
+            >
+              <Mail size={16} />
+              Request CV via Email
+            </a>
+            <button
+              className="btn-close-popup"
+              onClick={() => setShowCvPopup(false)}
+            >
+              Close
+            </button>
+          </div>
         </div>
       </div>
     </div>

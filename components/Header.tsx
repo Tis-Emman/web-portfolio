@@ -4,10 +4,11 @@ import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 import ThemeToggle from "./ThemeToggle";
-import { Check, Calendar, Mail, MapPin, FileText, Users } from "lucide-react";
+import { Check, Calendar, Mail, MapPin, FileText, Users, X, AlertCircle } from "lucide-react";
 
 export default function Header() {
   const [hovered, setHovered] = useState(false);
+  const [showCvPopup, setShowCvPopup] = useState(false);
 
   return (
     <header>
@@ -80,15 +81,49 @@ export default function Header() {
                 Send Email
               </a>
 
-              <a
-                href="https://mail.google.com/mail/?view=cm&fs=1&to=your.email@example.com&su=CV Request&body=Hi Emmanuel,"
+              <button
+                onClick={() => setShowCvPopup(true)}
                 className="btn flex items-center gap-1"
-                target="_blank"
               >
                 <FileText className="w-4 h-4" />
                 View my CV
-              </a>
+              </button>
             </div>
+          </div>
+        </div>
+      </div>
+
+      {/* CV Not Available Popup */}
+      <div className={`cv-popup-modal ${showCvPopup ? 'active' : ''}`}>
+        <div className="modal-backdrop" onClick={() => setShowCvPopup(false)} />
+        <div className="cv-popup-content">
+          <button
+            className="close-popup-btn"
+            onClick={() => setShowCvPopup(false)}
+          >
+            <X size={20} />
+          </button>
+          <div className="cv-popup-icon">
+            <AlertCircle size={48} />
+          </div>
+          <h3>CV Not Available Yet</h3>
+          <p>My CV is currently being updated and will be available soon. Please check back later or feel free to contact me directly.</p>
+          <div className="cv-popup-actions">
+            <a
+              href="https://mail.google.com/mail/?view=cm&fs=1&to=emmandelapena755@gmail.com&su=CV Request&body=Hi Emmanuel, I would like to request your CV."
+              className="btn-request-cv"
+              target="_blank"
+              onClick={() => setShowCvPopup(false)}
+            >
+              <Mail size={16} />
+              Request CV via Email
+            </a>
+            <button
+              className="btn-close-popup"
+              onClick={() => setShowCvPopup(false)}
+            >
+              Close
+            </button>
           </div>
         </div>
       </div>

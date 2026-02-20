@@ -47,7 +47,7 @@ export default function Projects() {
               <div className="project-content">
                 <h3>EMEREN Inventory System</h3>
                 <p className="project-description">
-                  An inventory management system for a local business, built with React and Supabase.
+                  An inventory management system for a local business.
                 </p>
                 <a href="https://github.com/Tis-Emman/PetSineVet" className="project-link" target="_blank" rel="noopener noreferrer">
                   View Project

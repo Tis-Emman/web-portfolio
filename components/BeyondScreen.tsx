@@ -19,7 +19,6 @@ export default function BeyondScreen() {
       if (!isPaused) {
         scrollAmount += scrollSpeed;
         
-        // Reset when we've scrolled through all images
         if (scrollAmount >= scrollContainer.scrollWidth / 2) {
           scrollAmount = 0;
         }
@@ -42,7 +41,6 @@ export default function BeyondScreen() {
     { src: '/images/hobbies/hobby_1.png', alt: 'Muay Thai' },
     { src: '/images/hobbies/hobby_2.png', alt: 'Gym & Fitness' },
     { src: '/images/hobbies/codefest-cert.jpeg', alt: 'Dance & Travel' },
-    // Duplicate for infinite loop effect
     { src: '/images/hobbies/hobby_1.png', alt: 'Muay Thai' },
     { src: '/images/hobbies/hobby_2.png', alt: 'Gym & Fitness' },
     { src: '/images/hobbies/codefest-cert.jpeg', alt: 'Dance & Travel' }

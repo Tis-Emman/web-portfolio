@@ -25,7 +25,6 @@ export function useAuth() {
     };
   };
 
-  // Initialize auth state
   useEffect(() => {
     let mounted = true;
 
@@ -72,25 +71,22 @@ export function useAuth() {
     setError("");
 
     try {
-      // Check if email already exists in profiles table
       const { data: existingUser, error: checkError } = await supabase
         .from("profiles")
         .select("email")
         .eq("email", data.email)
-        .single();
+        .single(); 
 
       if (existingUser) {
         throw new Error("This email is already registered. Please sign in instead.");
       }
 
-      // Proceed with signup
       const { data: authData, error: authError } = await supabase.auth.signUp({
         email: data.email,
         password: data.password,
       });
 
       if (authError) {
-        // Check if user already exists (backup check)
         if (authError.message.includes("already registered") || authError.message.includes("already been registered")) {
           throw new Error("This email is already registered. Please sign in instead.");
         }
@@ -98,8 +94,6 @@ export function useAuth() {
       }
       
       if (!authData.user) throw new Error("Registration failed. Please try again.");
-
-      // Check if profile already exists (in case of interrupted registration)
       const { data: existingProfile } = await supabase
         .from("profiles")
         .select("id")
@@ -107,7 +101,6 @@ export function useAuth() {
         .single();
 
       if (!existingProfile) {
-        // Only create profile if it doesn't exist
         const profileData = {
           id: authData.user.id,
           email: data.email,
@@ -123,7 +116,6 @@ export function useAuth() {
           .select();
 
         if (profileError) {
-          // If it's a duplicate key error, the profile was created in a race condition - that's ok
           if (profileError.code !== "23505") {
             throw new Error(`Failed to create profile: ${profileError.message}`);
           }
@@ -167,7 +159,6 @@ export function useAuth() {
     setError("");
 
     try {
-      // Optimistically clear user before the network call
       setUser(null);
 
       const { error: signOutError } = await supabase.auth.signOut({
