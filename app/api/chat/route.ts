@@ -97,14 +97,8 @@ export async function POST(request: Request) {
       throw userMsgError;
     }
 
-    // If admin is online or has already responded, don't call AI - just wait for admin response
-    if (isAdminOnline || adminHasResponded) {
-      return NextResponse.json({
-        reply: null,
-        sessionId,
-        message: "Admin is actively responding to this chat",
-      });
-    }
+    // Always generate AI response - admin can override if they want to respond
+    // This ensures users always get a response instead of just waiting
 
     // Get conversation history from database (last 10 messages)
     const { data: messageHistory, error: historyError } = await supabaseServer
