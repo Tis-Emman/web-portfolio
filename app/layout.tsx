@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import { JetBrains_Mono } from 'next/font/google'
 import '../styles/globals.css'
+import ChatButton from '@/components/ChatButton'
 
 const jetbrainsMono = JetBrains_Mono({ 
   subsets: ['latin'],
@@ -22,7 +23,10 @@ export default function RootLayout({
       <head>
         <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet" />
       </head>
-      <body className={jetbrainsMono.className}>{children}</body>
+      <body className={jetbrainsMono.className}>
+        {children}
+        <ChatButton />
+      </body>
     </html>
   )
 }

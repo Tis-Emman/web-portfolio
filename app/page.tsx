@@ -9,7 +9,6 @@ import Projects from '@/components/Projects'
 import Recommendations from '@/components/Recommendations'
 import Contact from '@/components/Contact'
 import ScrollIndicator from '@/components/ScrollIndicator'
-import ChatButton from '@/components/ChatButton'
 
 export default function Home() {
   return (
@@ -42,9 +41,6 @@ export default function Home() {
         <p>&copy; 2026 Emmanuel P. Dela Pena. All Rights Reserved.</p>
         <p>Developed in Baliuag City, Bulacan, Philippines</p>
       </footer>
-
-      <ChatButton />
-      
     </>
   )
   
